@@ -15,12 +15,12 @@
 #include <Wt/WTextArea.h>
 
 //---------------------------------------------------------------------------
-struct WtTicTacToeApplication : public Wt::WApplication
+struct WtOtonanApplication : public Wt::WApplication
 {
-    WtTicTacToeApplication(const Wt::WEnvironment& env)
+    WtOtonanApplication(const Wt::WEnvironment& env)
             : Wt::WApplication(env)
     {
-        setTitle("Thinking Wt 4: polishing a TicTacToe game");
+        setTitle("Kalendar Bali");
         //useStyleSheet("wt.css");
         //root()->addWidget(std::make_unique<WtTicTacToeDialog>());
     }
@@ -28,7 +28,7 @@ struct WtTicTacToeApplication : public Wt::WApplication
 //---------------------------------------------------------------------------
 std::unique_ptr<Wt::WApplication> createApplication(const Wt::WEnvironment& env)
 {
-    return std::make_unique<WtTicTacToeApplication>(env);
+    return std::make_unique<WtOtonanApplication>(env);
 }
 //---------------------------------------------------------------------------
 int main(int argc, char **argv)
