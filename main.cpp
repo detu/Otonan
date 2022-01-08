@@ -13,6 +13,32 @@
 #include <Wt/WPushButton.h>
 #include <Wt/WText.h>
 #include <Wt/WTextArea.h>
+#include <Wt/WTabWidget.h>
+#include <Wt/WMenuItem.h>
+
+
+struct WtOtonanDialog : public Wt::WContainerWidget
+{
+    // create a dialag with 3 tabs: saka, masehi, and notes
+    WtOtonanDialog()
+            : tabW_(addWidget(std::make_unique<Wt::WTabWidget>()))
+    {
+        setContentAlignment(Wt::AlignmentFlag::Center);
+        tabW_->addTab(std::make_unique<Wt::WTextArea>("Kalendar Bali."),
+                     "Bali", Wt::ContentLoading::Eager);
+        tabW_->addTab(std::make_unique<Wt::WTextArea>("Kalender Masehi."),
+                     "Masehi", Wt::ContentLoading::Eager);
+        tabW_->addTab(std::make_unique<Wt::WTextArea>("Catatan."),
+                     "Notes", Wt::ContentLoading::Eager);
+        auto *tab= tabW_->addTab(std::make_unique<Wt::WTextArea>("Tutup."),
+                               "Close");
+        tab->setCloseable(true);
+        tabW_->setStyleClass("tabwidget");
+
+    }
+private:
+    Wt::WTabWidget*  tabW_;
+};
 
 //---------------------------------------------------------------------------
 struct WtOtonanApplication : public Wt::WApplication
@@ -22,7 +48,7 @@ struct WtOtonanApplication : public Wt::WApplication
     {
         setTitle("Kalendar Bali");
         //useStyleSheet("wt.css");
-        //root()->addWidget(std::make_unique<WtTicTacToeDialog>());
+        root()->addWidget(std::make_unique<WtOtonanDialog>());
     }
 };
 //---------------------------------------------------------------------------
