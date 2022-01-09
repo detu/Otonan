@@ -15,29 +15,42 @@
 #include <Wt/WTextArea.h>
 #include <Wt/WTabWidget.h>
 #include <Wt/WMenuItem.h>
+#include <Wt/WCalendar.h>
 
 
 struct WtOtonanDialog : public Wt::WContainerWidget
 {
     // create a dialag with 3 tabs: saka, masehi, and notes
     WtOtonanDialog()
-            : tabW_(addWidget(std::make_unique<Wt::WTabWidget>()))
+            : cal_(addNew<Wt::WCalendar>())
     {
         setContentAlignment(Wt::AlignmentFlag::Center);
-        tabW_->addTab(std::make_unique<Wt::WTextArea>("Kalendar Bali."),
-                     "Bali", Wt::ContentLoading::Eager);
-        tabW_->addTab(std::make_unique<Wt::WTextArea>("Kalender Masehi."),
-                     "Masehi", Wt::ContentLoading::Eager);
-        tabW_->addTab(std::make_unique<Wt::WTextArea>("Catatan."),
-                     "Notes", Wt::ContentLoading::Eager);
-        auto *tab= tabW_->addTab(std::make_unique<Wt::WTextArea>("Tutup."),
-                               "Close");
-        tab->setCloseable(true);
-        tabW_->setStyleClass("tabwidget");
+//        tabW_->addTab(std::make_unique<Wt::WTextArea>("Kalendar Bali."),
+//                     "Bali", Wt::ContentLoading::Eager);
+//        tabW_->addTab(std::make_unique<Wt::WTextArea>("Kalender Masehi."),
+//                     "Masehi", Wt::ContentLoading::Eager);
+//        tabW_->addTab(std::make_unique<Wt::WTextArea>("Catatan."),
+//                     "Notes", Wt::ContentLoading::Eager);
+//        tabW_->setStyleClass("Wt-tabs");
+        auto out = addNew<Wt::WText>();
+        out->addStyleClass("help-block");
+
+        cal_->selectionChanged().connect([=] {
+            std::set<Wt::WDate> selection = cal_->selection();
+            if (selection.size() != 0) {
+                Wt::WDate d;
+                d = (*selection.begin());
+                Wt::WDate toDate(d.year() + 1, 1, 1);
+                int days = d.daysTo(toDate);
+                out->setText(Wt::WString("<p>That's {1} days until New Year's Day!</p>")
+                                     .arg(days));
+            }
+        });
 
     }
 private:
-    Wt::WTabWidget*  tabW_;
+    //Wt::WTabWidget*  tabW_;
+    Wt::WCalendar* cal_;
 };
 
 //---------------------------------------------------------------------------
@@ -47,7 +60,7 @@ struct WtOtonanApplication : public Wt::WApplication
             : Wt::WApplication(env)
     {
         setTitle("Kalendar Bali");
-        //useStyleSheet("wt.css");
+        useStyleSheet("wt.css");
         root()->addWidget(std::make_unique<WtOtonanDialog>());
     }
 };
