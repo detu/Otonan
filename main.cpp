@@ -17,13 +17,14 @@
 #include <Wt/WMenuItem.h>
 #include <Wt/WStackedWidget.h>
 #include <Wt/WMenu.h>
-
+#include <Wt/WNavigationBar.h>
 
 struct WtOtonanDialog : public Wt::WContainerWidget
 {
     // create a dialag with 3 menus: saka, masehi, and notes
     WtOtonanDialog()
-            : contents_(std::make_unique<Wt::WStackedWidget>())
+            : contents_(nullptr),
+              navBar_(nullptr)
     {
         //setContentAlignment(Wt::AlignmentFlag::Center);
 //        tabW_->addTab(std::make_unique<Wt::WTextArea>("Kalendar Bali."),
@@ -33,17 +34,33 @@ struct WtOtonanDialog : public Wt::WContainerWidget
 //        tabW_->addTab(std::make_unique<Wt::WTextArea>("Catatan."),
 //                     "Notes", Wt::ContentLoading::Eager);
 //        tabW_->setStyleClass("Wt-tabs");
-        auto menu = addNew<Wt::WMenu>(contents_.get());
+        //auto menu = addNew<Wt::WMenu>(contents_.get());
         //menu->setStyleClass("nav nav-pills flex-row");
-        menu->setWidth(150);
-        menu->addItem("Saka", std::make_unique<Wt::WTextArea>("Saka"));
-        menu->addItem("Masehi", std::make_unique<Wt::WTextArea>("Masehi"));
-        menu->addItem("Notes", std::make_unique<Wt::WTextArea>("Notes"));
-        addWidget(std::move(contents_));
+//        menu->setWidth(150);
+//        menu->addItem("Saka", std::make_unique<Wt::WTextArea>("Saka"));
+//        menu->addItem("Masehi", std::make_unique<Wt::WTextArea>("Masehi"));
+//        menu->addItem("Notes", std::make_unique<Wt::WTextArea>("Notes"));
+//        addWidget(std::move(contents_));
+        navBar_ = addNew<Wt::WNavigationBar>();
+        navBar_->setResponsive(true);
+        navBar_->addStyleClass("navbar-light bg-light");
+        navBar_->setTitle("Otonan","https://www.google.com/search?q=otonan");
+
+        contents_ = addNew<Wt::WStackedWidget>();
+        contents_->addStyleClass("contents");
+
+        auto leftMenu = std::make_unique<Wt::WMenu>(contents_);
+        auto leftMenu_ = navBar_->addMenu(std::move(leftMenu));
+
+        leftMenu_->addItem("Masehi", std::make_unique<Wt::WText>("Kalender Masehi"));
+        leftMenu_->addItem("Saka", std::make_unique<Wt::WText>("Kalender Bali"));
+        leftMenu_->addItem("Notes", std::make_unique<Wt::WText>("Reminder!"));
+        leftMenu_->addStyleClass("me-auto");
     }
 private:
     //Wt::WTabWidget*  tabW_;
-    std::unique_ptr<Wt::WStackedWidget> contents_;
+    Wt::WStackedWidget *contents_;
+    Wt::WNavigationBar *navBar_;
 };
 
 //---------------------------------------------------------------------------
